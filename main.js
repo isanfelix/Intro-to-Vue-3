@@ -1,3 +1,5 @@
+
+
 // 2# Create Vue App
 const app = Vue.createApp(
     // This is  is Option Object
@@ -5,20 +7,23 @@ const app = Vue.createApp(
         // ES6 Shorthand, MOVE TO Product Display
         data() {
             return {
-                cart: 0,
+                cartX: 0,
                 // this data will passing to child (PROPS)
-                premiumX: true,
+                premiumX: false,
                 
             }
         },
         methods: {
             updateAddToCart() {
-                this.cart += 1
-                this.inventory -= 1
+                this.cartX += 1
+                
             },
             updateRemoveFromCart() {
-                this.cart -= 1
-                this.inventory += 1
+                this.cartX -= 1
+                
             },
         },
     })
+
+// app.config.devtools = true;
+// app.config.productionTip = false;

@@ -56,11 +56,23 @@ app.component('product-display', {
         
         >Add to Cart</button>
 
-        <!-- :disabled="inStock" -->
+        
+        <!--    :disabled="inStock"
+        
+                :disabled="cart <= 0"
+                :class="{ disabledButton: cart <= 0 }"
+
+                :disabled="inventory >= 10"
+                :class="{ disabledButton: inventory >= 10 }"
+
+                MASIH problem kenapa cart sudah di props {{cart}} tapi di dalam definisi ini tidak berjalan
+        -->
         <button 
           class="button"
+          
           :disabled="cart <= 0"
           :class="{ disabledButton: cart <= 0 }"
+          
           @click="removeFromCart"
           
         >Remove From Cart</button>
@@ -73,6 +85,10 @@ app.component('product-display', {
   props:{
     premium: {
         type: Boolean,
+        required: true
+    },
+    cart: {
+        type: Number,
         required: true
     }
   },
@@ -100,10 +116,12 @@ app.component('product-display', {
             // menotice parent event click add to cart (child > parent), 
             // yg di child hanya kirim event, diolah di main js
             this.$emit('add-to-cart')
+            this.inventory -= 1
         
         },
         removeFromCart() {
             this.$emit('remove-from-cart')
+            this.inventory += 1
 
         },
         updateVariant(index) {

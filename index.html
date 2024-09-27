@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>Vue Mastery</title>
+    <title>AdiosMart</title>
     <!-- Import Styles -->
     <link rel="stylesheet" href="./assets/styles.css" />
     <!-- 1# Import Vue.js -->
@@ -12,10 +12,13 @@
     <div id="app">
       <div class="nav-bar">
 
-        <div class="cart">Cart ({{ cart }})</div>
+        <div 
+          class="cart"
+        >Cart ({{ cartX }})</div>
 
         <product-display 
           :premium="premiumX"
+          :cart="cartX"
           @add-to-cart="updateAddToCart"
           @remove-from-cart="updateRemoveFromCart"
         
