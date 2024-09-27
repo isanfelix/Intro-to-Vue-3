@@ -5,15 +5,35 @@
     <title>Vue Mastery</title>
     <!-- Import Styles -->
     <link rel="stylesheet" href="./assets/styles.css" />
-    <!-- Import Vue.js -->
-    <script src="https://unpkg.com/vue@3.0.0-beta.12/dist/vue.global.js"></script>
+    <!-- 1# Import Vue.js -->
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
   </head>
   <body>
     <div id="app">
-      <h1>Product goes here</h1>
+      <div class="nav-bar">
+
+        <div class="cart">Cart ({{ cart }})</div>
+
+        <product-display 
+          :premium="premiumX"
+          @add-to-cart="updateAddToCart"
+          @remove-from-cart="updateRemoveFromCart"
+        
+        ></product-display>
+      
+      </div>
     </div>
 
-    <!-- Import Js -->
+    <!-- Import App -->
     <script src="./main.js"></script>
+    
+    <!-- Import Component -->
+     <script src="./components/ProductDisplay.js"></script>
+
+    <!-- 2# Mount Vue App to CSS Selector dari Element ID app -->
+    <script>
+      const mountedApp = app.mount('#app')
+    </script>
+
   </body>
 </html>
