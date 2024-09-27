@@ -47,11 +47,13 @@ app.component('product-display', {
         <!-- <button class="button" v-on:click="addToCart">Add to Cart</button> -->
         <!-- IN SHORTHAND -->
 
-        <!-- :disabled="!inStock" -->
+        <!--    :disabled="!inStock" 
+                :class="{ disabledButton: inventory <= 0 }"
+                :disabled="inventory <= 0"
+        -->
         <button 
           class="button"
-          :class="{ disabledButton: inventory <= 0 }"
-          :disabled="inventory <= 0"
+          
           @click="addToCart"
         
         >Add to Cart</button>
@@ -62,16 +64,10 @@ app.component('product-display', {
                 :disabled="cart <= 0"
                 :class="{ disabledButton: cart <= 0 }"
 
-                :disabled="inventory >= 10"
-                :class="{ disabledButton: inventory >= 10 }"
-
                 MASIH problem kenapa cart sudah di props {{cart}} tapi di dalam definisi ini tidak berjalan
         -->
         <button 
           class="button"
-          
-          :disabled="cart <= 0"
-          :class="{ disabledButton: cart <= 0 }"
           
           @click="removeFromCart"
           
@@ -100,9 +96,9 @@ app.component('product-display', {
             brand: "Adidos",
             // image: "./assets/images/socks_green.jpg",
             url: "https://vuejs.org",
-            inventory: 10,
+            // inventory: 10,
             selectedVariant: 0,
-            inStock: true,
+            // inStock: true,
             details: ['50% cotton', '30% wool', '20% polyester'],
             variants: [
                 {id: 1, color: 'green', image: './assets/images/socks_green.jpg', qty: 10},
@@ -115,13 +111,15 @@ app.component('product-display', {
         addToCart() {
             // menotice parent event click add to cart (child > parent), 
             // yg di child hanya kirim event, diolah di main js
-            this.$emit('add-to-cart')
-            this.inventory -= 1
+            selectedId = this.variants[this.selectedVariant].id
+            this.$emit('add-to-cart', selectedId)
+            // this.inventory -= 1
         
         },
         removeFromCart() {
-            this.$emit('remove-from-cart')
-            this.inventory += 1
+            selectedId = this.variants[this.selectedVariant].id
+            this.$emit('remove-from-cart',selectedId)
+            // this.inventory += 1
 
         },
         updateVariant(index) {
@@ -134,6 +132,44 @@ app.component('product-display', {
     },
     // COMPUTING PROPERTIES
     computed: {
+        totalSelectCart() {
+            existCart = this.cart.length
+            if (existCart === 0) {                
+                return 0
+            }
+            
+            // Initialize an empty object
+            countExist = {}
+            
+            for (let i = 0; i < existCart; i++) {
+                const item = this.cart[i]
+                // If the item already exists in the object, increment the count
+                if (countExist[item]) {
+                    countExist[item]++
+                } else {
+                    // If the item doesn't exist, initialize the count to 1
+                    countExist[item] = 1
+                }
+            }
+
+            return countExist
+            
+        },
+        inventory() {
+            varCart = this.totalSelectCart
+            selectedId = this.variants[this.selectedVariant].id
+            if (typeof varCart === 'object' && varCart !== null) {
+                if (selectedId in varCart) {
+                    subtractInventory = varCart[selectedId]
+                }
+            } else {
+                subtractInventory = varCart
+            }
+            
+            console.log(subtractInventory, 'subtractInventory');
+            
+            return (this.variants[this.selectedVariant].qty) - subtractInventory;
+        },
         title() {
             return this.brand + ' ' + this.product
         },

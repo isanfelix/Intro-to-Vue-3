@@ -7,19 +7,32 @@ const app = Vue.createApp(
         // ES6 Shorthand, MOVE TO Product Display
         data() {
             return {
-                cartX: 0,
+                // testing ketika cartX diubah tipenya menjadi array
+                // cartX: 0,
+                cartX: [],
                 // this data will passing to child (PROPS)
                 premiumX: false,
                 
             }
         },
         methods: {
-            updateAddToCart() {
-                this.cartX += 1
+            updateAddToCart(id) {
+                // karena format cartX = ARRAY, gunakan cara ARRAY
+                this.cartX.push(id)
+                // this.cartX += 1
                 
             },
-            updateRemoveFromCart() {
-                this.cartX -= 1
+            updateRemoveFromCart(id) {
+                // Find the last occurrence of the value (id) in the cart array
+                const index = this.cartX.lastIndexOf(id);
+                
+                // If the value is found, remove it using splice
+                if (index !== -1) {
+                    this.cartX.splice(index, 1);  // Remove 1 element at the found index
+                }
+
+                // this.cartX.pop(id)
+                // this.cartX -= 1
                 
             },
         },
