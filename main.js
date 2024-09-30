@@ -11,7 +11,7 @@ const app = Vue.createApp(
                 // cartX: 0,
                 cartX: [],
                 // this data will passing to child (PROPS)
-                premiumX: false,
+                premiumX: true,
                 
             }
         },

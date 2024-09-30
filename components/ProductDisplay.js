@@ -26,22 +26,23 @@ app.component('product-display', {
         <p>Shipping: {{shipping}}</p>
 
         <!-- FOR LOOP -->
-        <ul>
+        <!-- <ul>
           <li v-for="detail in details">{{ detail }}</li>
         </ul>
+        -->
         <!-- GIVE :KEY MAKE EVERY ELEMENT LIST HAVE UNIQUE IDENTITY ID -->
          <!-- penamaan property di :style harus mengikuti aturan javascript karena itu style object atau gunakan kebab case 'background-color'-->
         <div 
           v-for="(variant, index) in variants" 
           :key="variant.id" 
-          @mouseover="updateVariant(index)"
+          @click="updateVariant(index)"
           class="color-circle"
           :style="{ backgroundColor: variant.color }"
-        >{{ variant.color }}</div>
+        ></div>
 
-        <p>{{ description }}</p>
+        <!-- <p>{{ description }}</p> -->
         <!-- LINK -->
-        <a :href="url">VUE Quick Start</a>
+        <!-- <a :href="url">VUE Quick Start</a> -->
 
         <!-- V-ON -->
         <!-- <button class="button" v-on:click="addToCart">Add to Cart</button> -->
@@ -102,7 +103,7 @@ app.component('product-display', {
             details: ['50% cotton', '30% wool', '20% polyester'],
             variants: [
                 {id: 1, color: 'green', image: './assets/images/socks_green.jpg', qty: 10},
-                {id: 2, color: 'blue', image: './assets/images/socks_blue.jpg', qty: 4},
+                {id: 2, color: 'blue', image: './assets/images/socks_blue.jpg', qty: 5},
             ],
             description: "Lorem Ipsum is simply dummy text of the printing and typesetting industry"
         }
@@ -124,6 +125,10 @@ app.component('product-display', {
         },
         updateVariant(index) {
             this.selectedVariant = index
+            console.log('CALL');
+            // this.subtractInventory
+            // this.inventory
+            // how to update of subtract value on invertory compute
         }
         // updateImage(variantImage) {
         //     this.image = variantImage
@@ -132,8 +137,9 @@ app.component('product-display', {
     },
     // COMPUTING PROPERTIES
     computed: {
-        totalSelectCart() {
-            existCart = this.cart.length
+        subtractInventory() {
+            const existCart = this.cart.length
+            let subtractTotal = 0
             if (existCart === 0) {                
                 return 0
             }
@@ -152,23 +158,33 @@ app.component('product-display', {
                 }
             }
 
-            return countExist
+            console.log(countExist, 'countExist');
+
+            const selectedId = this.variants[this.selectedVariant].id
+            // kalo tipe object maka get value dari key index yg diseleksi
+            // if (typeof countExist === 'object' && countExist !== null) {
+            //     if (selectedId in countExist) {
+            //         subtractTotal = countExist[selectedId]
+            //     }
+            // } 
+
+            if (selectedId in countExist) {
+                subtractTotal = countExist[selectedId]
+            }
+            // else {
+            //     // kalo bukan object / nol ya tinggal bypass aja nol nya
+            //     subtractTotal = countExist
+            // }
+            
+            console.log(subtractTotal, 'subtractTotal');
+            console.log(selectedId,'selectedId');
+
+            return subtractTotal
             
         },
-        inventory() {
-            varCart = this.totalSelectCart
-            selectedId = this.variants[this.selectedVariant].id
-            if (typeof varCart === 'object' && varCart !== null) {
-                if (selectedId in varCart) {
-                    subtractInventory = varCart[selectedId]
-                }
-            } else {
-                subtractInventory = varCart
-            }
+        inventory() {            
             
-            console.log(subtractInventory, 'subtractInventory');
-            
-            return (this.variants[this.selectedVariant].qty) - subtractInventory;
+            return (this.variants[this.selectedVariant].qty) - this.subtractInventory;
         },
         title() {
             return this.brand + ' ' + this.product
