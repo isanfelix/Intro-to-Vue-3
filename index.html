@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>AdiosMart</title>
+    <title>Adios Store</title>
     <!-- Import Styles -->
     <link rel="stylesheet" href="./assets/styles.css" />
     <!-- 1# Import Vue.js -->
@@ -11,32 +11,26 @@
   <body>
     <div id="app">
       <div class="nav-bar">
+        <div class="cart">Cart ({{ cartX.length }})</div>
 
-        <div 
-          class="cart"
-        >Cart ({{ cartX.length }})</div>
-
-        <product-display 
+        <product-display
           :premium="premiumX"
           :cart="cartX"
           @add-to-cart="updateAddToCart"
           @remove-from-cart="updateRemoveFromCart"
-        
         ></product-display>
-      
       </div>
     </div>
 
     <!-- Import App -->
     <script src="./main.js"></script>
-    
+
     <!-- Import Component -->
-     <script src="./components/ProductDisplay.js"></script>
+    <script src="./components/ProductDisplay.js"></script>
 
     <!-- 2# Mount Vue App to CSS Selector dari Element ID app -->
     <script>
-      const mountedApp = app.mount('#app')
+      const mountedApp = app.mount("#app");
     </script>
-
   </body>
 </html>

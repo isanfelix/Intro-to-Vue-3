@@ -1,6 +1,5 @@
-app.component('product-display', {
-    
-    template:
+app.component("product-display", {
+  template:
     //ACTIVATE STRING HTML ES6
     /*html*/
     `<div class="product-display">
@@ -54,7 +53,8 @@ app.component('product-display', {
         -->
         <button 
           class="button"
-          
+          :class="{ disabledButton: inventory <= 0 }"
+          :disabled="inventory <= 0"
           @click="addToCart"
         
         >Add to Cart</button>
@@ -69,7 +69,8 @@ app.component('product-display', {
         -->
         <button 
           class="button"
-          
+          :disabled="cart <= 0"
+          :class="{ disabledButton: cart <= 0 }"
           @click="removeFromCart"
           
         >Remove From Cart</button>
@@ -79,124 +80,113 @@ app.component('product-display', {
   
   </div>`,
   // menurunkan dari parent to child
-  props:{
+  props: {
     premium: {
-        type: Boolean,
-        required: true
+      type: Boolean,
+      required: true,
     },
     cart: {
-        type: Number,
-        required: true
-    }
+      type: Number,
+      required: true,
+    },
   },
   // ES6 Shorthand
-    data() {
-        return {
-            
-            product: "Socks",
-            brand: "Adidos",
-            // image: "./assets/images/socks_green.jpg",
-            url: "https://vuejs.org",
-            // inventory: 10,
-            selectedVariant: 0,
-            // inStock: true,
-            details: ['50% cotton', '30% wool', '20% polyester'],
-            variants: [
-                {id: 1, color: 'green', image: './assets/images/socks_green.jpg', qty: 10},
-                {id: 2, color: 'blue', image: './assets/images/socks_blue.jpg', qty: 5},
-            ],
-            description: "Lorem Ipsum is simply dummy text of the printing and typesetting industry"
-        }
+  data() {
+    return {
+      product: "Socks",
+      brand: "Adios",
+      // image: "./assets/images/socks_green.jpg",
+      url: "https://vuejs.org",
+      // inventory: 10,
+      selectedVariant: 0,
+      // inStock: true,
+      details: ["50% cotton", "30% wool", "20% polyester"],
+      variants: [
+        {
+          id: 1,
+          color: "green",
+          image: "./assets/images/socks_green.jpg",
+          qty: 10,
+        },
+        {
+          id: 2,
+          color: "blue",
+          image: "./assets/images/socks_blue.jpg",
+          qty: 5,
+        },
+      ],
+      description:
+        "Lorem Ipsum is simply dummy text of the printing and typesetting industry",
+    };
+  },
+  methods: {
+    addToCart() {
+      // menotice parent event click add to cart (child > parent),
+      // yg di child hanya kirim event, diolah di main js
+      selectedId = this.variants[this.selectedVariant].id;
+      this.$emit("add-to-cart", selectedId);
+      // this.inventory -= 1
     },
-    methods: {
-        addToCart() {
-            // menotice parent event click add to cart (child > parent), 
-            // yg di child hanya kirim event, diolah di main js
-            selectedId = this.variants[this.selectedVariant].id
-            this.$emit('add-to-cart', selectedId)
-            // this.inventory -= 1
-        
-        },
-        removeFromCart() {
-            selectedId = this.variants[this.selectedVariant].id
-            this.$emit('remove-from-cart',selectedId)
-            // this.inventory += 1
-
-        },
-        updateVariant(index) {
-            this.selectedVariant = index
-            console.log('CALL');
-            // this.subtractInventory
-            // this.inventory
-            // how to update of subtract value on invertory compute
-        }
-        // updateImage(variantImage) {
-        //     this.image = variantImage
-
-        // }
+    removeFromCart() {
+      selectedId = this.variants[this.selectedVariant].id;
+      this.$emit("remove-from-cart", selectedId);
+      // this.inventory += 1
     },
-    // COMPUTING PROPERTIES
-    computed: {
-        subtractInventory() {
-            const existCart = this.cart.length
-            let subtractTotal = 0
-            if (existCart === 0) {                
-                return 0
-            }
-            
-            // Initialize an empty object
-            countExist = {}
-            
-            for (let i = 0; i < existCart; i++) {
-                const item = this.cart[i]
-                // If the item already exists in the object, increment the count
-                if (countExist[item]) {
-                    countExist[item]++
-                } else {
-                    // If the item doesn't exist, initialize the count to 1
-                    countExist[item] = 1
-                }
-            }
+    updateVariant(index) {
+      this.selectedVariant = index;
+      // how to update of subtract value on invertory compute ?? > DONE tinggal set default variable subtractTotal
+    },
+    // updateImage(variantImage) {
+    //     this.image = variantImage
 
-            console.log(countExist, 'countExist');
+    // }
+  },
+  // COMPUTING PROPERTIES
+  computed: {
+    subtractInventory() {
+      const existCart = this.cart.length;
+      let subtractTotal = 0;
+      if (existCart === 0) {
+        return 0;
+      }
 
-            const selectedId = this.variants[this.selectedVariant].id
-            // kalo tipe object maka get value dari key index yg diseleksi
-            // if (typeof countExist === 'object' && countExist !== null) {
-            //     if (selectedId in countExist) {
-            //         subtractTotal = countExist[selectedId]
-            //     }
-            // } 
+      // Initialize an empty object
+      countExist = {};
 
-            if (selectedId in countExist) {
-                subtractTotal = countExist[selectedId]
-            }
-            // else {
-            //     // kalo bukan object / nol ya tinggal bypass aja nol nya
-            //     subtractTotal = countExist
-            // }
-            
-            console.log(subtractTotal, 'subtractTotal');
-            console.log(selectedId,'selectedId');
-
-            return subtractTotal
-            
-        },
-        inventory() {            
-            
-            return (this.variants[this.selectedVariant].qty) - this.subtractInventory;
-        },
-        title() {
-            return this.brand + ' ' + this.product
-        },
-        image() {
-            return this.variants[this.selectedVariant].image
-        },
-        shipping() {
-            if (this.premium) {
-                return 'Free'
-            }
-            return 1000
+      for (let i = 0; i < existCart; i++) {
+        const item = this.cart[i];
+        // If the item already exists in the object, increment the count
+        if (countExist[item]) {
+          countExist[item]++;
+        } else {
+          // If the item doesn't exist, initialize the count to 1
+          countExist[item] = 1;
         }
-    }
-})
+      }
+
+      const selectedId = this.variants[this.selectedVariant].id;
+      // kalo tipe object maka get value dari key index yg diseleksi
+
+      if (selectedId in countExist) {
+        subtractTotal = countExist[selectedId];
+      }
+
+      return subtractTotal;
+    },
+    inventory() {
+      return this.variants[this.selectedVariant].qty - this.subtractInventory;
+    },
+    title() {
+      return this.brand + " " + this.product;
+    },
+    image() {
+      return this.variants[this.selectedVariant].image;
+    },
+    shipping() {
+      if (this.premium) {
+        return "Free";
+      }
+      return 1000;
+    },
+  },
+});
